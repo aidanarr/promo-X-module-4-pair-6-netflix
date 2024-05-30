@@ -26,6 +26,7 @@ CREATE TABLE Actors (
     country VARCHAR(45) not null,
     birthday date not null
 );
+
 INSERT into Movies (title,genre,image,category,`year`)
 values ("Mamma Mia","Musical","https://upload.wikimedia.org/wikipedia/en/a/a6/MammaMiaTeaserPoster.JPG","Top 10", 2008);
 
@@ -35,3 +36,14 @@ UPDATE Movies set `year`= 1997 where title = "La vita è bella";
 
 SELECT * FROM actors where birthday > "1950-01-01" and birthday< "1960-12-31";
 DELETE FROM Users where `name` like "M%";
+
+ALTER TABLE Users ADD COLUMN fk_idMovies INT;
+ALTER TABLE Users ADD FOREIGN KEY (fk_idMovies) REFERENCES Movies (idMovies);
+SELECT * from Users;
+
+ALTER TABLE Movies ADD COLUMN fk_idUsers INT;
+ALTER TABLE Movies ADD FOREIGN KEY (fk_idUsers) REFERENCES Users (idUser);
+
+INSERT INTO users_has_movies (idMovies, idUser) values (3 and 2, 2);
+
+UPDATE users_has_movies set idMovies = 4 where idUser = 2 ;
