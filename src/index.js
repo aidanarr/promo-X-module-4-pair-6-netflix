@@ -12,7 +12,7 @@ server.listen(serverPort, () => {
   console.log(`Server listening at http://localhost:${serverPort}`);
 });
 
-server.get("/movies",(req,res)=>{
+server.get('/movies',(req,res)=>{
   const fakeMovies = [
     {
       id: 1,
