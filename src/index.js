@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const mysql = require("mysql2/promise");
 
 // create and config server
 const server = express();
@@ -12,7 +13,20 @@ server.listen(serverPort, () => {
   console.log(`Server listening at http://localhost:${serverPort}`);
 });
 
-server.get('/movies',(req,res)=>{
+async function connectBD() {
+  const conex = await mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "root",
+    database: "netflix",    
+  });
+
+   await conex.connect();
+
+  return conex;
+}
+
+server.get('/movies', async (req,res)=>{
   const fakeMovies = [
     {
       id: 1,
@@ -35,5 +49,16 @@ server.get('/movies',(req,res)=>{
       director: "Christopher Nolan",
     },
   ];
-  res.json({success:true,movies:fakeMovies})
+  const conn = await connectBD();
+
+  const selectMovies = "SELECT * FROM Movies;"
+
+  const [results] = await conn.query(selectMovies);
+
+  res.json({success:true,movies:results});
 })
+
+
+// Configuración del primer servidor de estáticos
+const staticServerPathWeb = './src/public-react';
+server.use(express.static(staticServerPathWeb));
