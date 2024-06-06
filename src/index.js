@@ -10,7 +10,7 @@ server.use(express.json());
 // init express aplication
 const serverPort = 4000;
 server.listen(serverPort, () => {
-  console.log(`Server listening at http://localhost:${serverPort}`);
+  console.log(`Server listening at http://localhost:${serverPort}`)
 });
 
 async function connectBD() {
@@ -18,7 +18,7 @@ async function connectBD() {
     host: "localhost",
     user: "root",
     password: "root",
-    database: "netflix",    
+    database: "netflix"
   });
 
    await conex.connect();
@@ -51,11 +51,12 @@ server.get('/movies', async (req,res)=>{
   // ];
   const conn = await connectBD();
 
-  const selectMovies = "SELECT * FROM Movies;"
+  const selectMovies = "SELECT * FROM Movies;";
 
   const [results] = await conn.query(selectMovies);
 
   res.json({success:true,movies:results});
+  conn.end();
 })
 
 
