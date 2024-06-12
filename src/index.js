@@ -12,9 +12,7 @@ server.set('view engine', 'ejs');
 
 // init express aplication
 const serverPort = 4000;
-server.listen(serverPort, () => {
-  console.log(`Server listening at http://localhost:${serverPort}`)
-});
+server.listen(serverPort);
 
 async function connectBD() {
   const conex = await mysql.createConnection({
@@ -47,7 +45,7 @@ server.get('/movies', async (req,res)=>{
   
   const [results] = await conn.query(selectMovies);
 
-  res.json({success:true,movies:results});
+  res.status(200).json({success:true,movies:results});
   conn.end();
 })
 
@@ -105,4 +103,34 @@ server.post("/server/login", async (req, res) => {
   } else {
     res.status(400).json({success: false, message: "Email incorrecto"});
   }
+})
+
+// const authorization = (req, res, next) => {
+//   const userId = req.headers.userId;
+//   console.log(userId);
+//   if (!userId) {
+//     res.status(400).json({success: false, message: "No autorizado"})
+//   } else {
+//     try {
+//       req.userId = userId;
+//     } catch (error) {
+//       res.status(400).json({success: false, message: error});
+//     }
+//     next();
+//   }
+// }
+
+server.get("/:idUser/profile", async (req, res) => {
+  const idUser = req.headers.userId;
+
+  
+  try {
+    const conex = await connectBD();
+    const sqlUsers = "SELECT * FROM users where idUser = ?;";
+    const [results] = await conex.query(sqlUsers, [idUser]);
+    res.status(200).json({succes: true, data: results});
+  } catch (error) {
+    res.status(400).json({succes: false, message: error});
+  }
+  console.log(idUser);
 })
